@@ -38,7 +38,7 @@ habitat:
   dataset:
     type: "OVON-v1"
     split: train
-    data_path: data/datasets/ovon/hm3d/v1/{split}/{split}.json.gz
+    data_path: data/datasets/ovon/hm3d/{split}/{split}.json.gz
   simulator:
     type: "OVONSim-v0"
     navmesh_settings:
@@ -52,10 +52,10 @@ habitat_baselines:
   tensorboard_dir: "tb"
   video_dir: "video_dir"
   test_episode_count: -1
-  eval_ckpt_path_dir: "data/new_checkpoints"
+  eval_ckpt_path_dir: "data/checkpoints"
   num_environments: 32
-  checkpoint_folder: "data/new_checkpoints"
-  trainer_name: "ver_dagger"
+  checkpoint_folder: "data/checkpoints"
+  trainer_name: "ver_transformer"
   num_updates: -1
   total_num_steps: 150000000
   log_interval: 10
@@ -65,7 +65,7 @@ habitat_baselines:
   force_torch_single_threaded: True
 
   eval:
-    split: "val"
+    split: "val_seen"
 
   rl:
 

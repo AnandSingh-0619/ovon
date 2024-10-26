@@ -28,7 +28,7 @@ habitat:
   dataset:
     type: "OVON-v1"
     split: train
-    data_path: data/datasets/ovon/hm3d/v1/{split}/{split}.json.gz
+    data_path: data/datasets/ovon/hm3d/{split}/{split}.json.gz
   simulator:
     type: "OVONSim-v0"
     navmesh_settings:
@@ -37,6 +37,7 @@ habitat:
 
 habitat_baselines:
   torch_gpu_id: 0
+  writer_type: "wb"
   tensorboard_dir: "tb"
   video_dir: "video_dir"
   test_episode_count: -1

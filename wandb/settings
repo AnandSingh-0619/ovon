@@ -1,0 +1,5 @@
+[default]
+entity = anandsingh16898-georgia-institute-of-technology
+project = objectnav
+base_url = https://api.wandb.ai
+
