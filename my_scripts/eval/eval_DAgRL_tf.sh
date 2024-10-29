@@ -25,7 +25,7 @@ source /nethome/asingh3064/flash/envs/etc/profile.d/conda.sh
 conda deactivate
 conda activate ovon
 
-split="val_seen"
+split="val_unseen"
 
 TENSORBOARD_DIR="tb/objectnav/train/"
 CHECKPOINT_DIR="data/checkpoints/"
@@ -38,10 +38,10 @@ srun python -um ovon.run \
   habitat_baselines.eval_ckpt_path_dir=${CHECKPOINT_DIR} \
   habitat_baselines.log_file=${LOG_DIR} \
   habitat_baselines.checkpoint_folder=${CHECKPOINT_DIR} \
-  habitat.dataset.data_path=data/datasets/ovon/hm3d/v2/val_seen/val_seen.json.gz \
+  habitat.dataset.data_path=data/datasets/ovon/hm3d/v2/$split/val_unseen_hard.json.gz \
   ~habitat.task.lab_sensors.objectgoal_sensor \
   +habitat/task/lab_sensors@habitat.task.lab_sensors.clip_objectgoal_sensor=clip_objectgoal_sensor \
-  habitat.task.lab_sensors.clip_objectgoal_sensor.cache=siglip_seems_like_there_is_a_blank_ahead.pkl \
+  habitat.task.lab_sensors.clip_objectgoal_sensor.cache=data/text_embeddings/siglip.pkl \
   habitat.task.measurements.success.success_distance=0.25 \
   habitat.dataset.type="OVON-v1" \
   habitat.simulator.type="OVONSim-v0" \

@@ -42,8 +42,7 @@ class ClipObjectGoalSensor(Sensor):
         config: "DictConfig",
         **kwargs: Any,
     ):
-        # self.cache = load_pickle(config.cache)
-        self.cache = load_pickle('data/text_embeddings/siglip.pkl')
+        self.cache = load_pickle(config.cache)
         k = list(self.cache.keys())[0]
         self._embed_dim = self.cache[k].shape[0]
         for v in self.cache.values():
