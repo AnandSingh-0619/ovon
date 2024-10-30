@@ -16,7 +16,25 @@ data/
 # logs
 tb/
 train.log
-slurm_logs/
+slurm_logs/*
+
+#slurm folder
+slurm/*
+
+#old configs
+config/all/
+
+config/all/experiments/*.yaml
+config/all/tasks/*.yaml
+.yaml
+
+#slurm logs
+slurm_logs/*
+
+#Train logs
+Logs/*
+
+new_configs/*
 
 # scripts
 scripts/
