@@ -13,7 +13,9 @@ from habitat_baselines.run import execute_exp
 from omegaconf import OmegaConf  # keep this import for print debugging
 
 from ovon.config import ClipObjectGoalSensorConfig, HabitatConfigPlugin
+from ovon.trainers.ppo_od_trainer import PPO_ODTrainer
 
+from ovon.models.od_policy import PointNavResNetODPolicy
 
 def register_plugins():
     register_hydra_plugin(HabitatConfigPlugin)

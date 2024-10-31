@@ -53,7 +53,7 @@ class FusionType:
 
 
 @baseline_registry.register_policy
-class PointNavResNetCLIPPolicy(NetPolicy):
+class PointNavResNetODPolicy(NetPolicy):
     def __init__(
         self,
         observation_space: spaces.Dict,
@@ -266,6 +266,8 @@ class PointNavResNetCLIPPolicy(NetPolicy):
 
 
 class OVONNet(Net):
+    SEG_MASKS = "segmentation_masks"
+
     def __init__(
         self,
         observation_space: spaces.Dict,

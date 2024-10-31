@@ -12,7 +12,7 @@ from torchvision.transforms import functional as TF
 from ultralytics import YOLO
 from habitat.core.logging import logger
 from gym import spaces
-from constants import CLASSES
+from ovon.models.detection.constants import CLASSES
 
 class YOLOPerception():
     def __init__(
