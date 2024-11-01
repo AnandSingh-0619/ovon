@@ -24,7 +24,7 @@ conda deactivate
 conda activate ovon
 
 TENSORBOARD_DIR="tb/objectnav/train/ddppo_${JOB_ID}"
-CHECKPOINT_DIR="data/new_checkpoints/objectnav/ddppo_${JOB_ID}"
+CHECKPOINT_DIR="data/new_checkpoints/objectnav/ddppo_997723"
 LOG_DIR="Logs/ddppo_rnn_${JOB_ID}.log"
 split="train"
 
@@ -37,4 +37,5 @@ srun python -um ovon.run \
   habitat_baselines.log_file=${LOG_DIR} \
   habitat_baselines.num_environments=24 \
   habitat.dataset.data_path=data/datasets/ovon/hm3d/$split/$split.json.gz \
+  habitat_baselines.load_resume_state_config=True \
   habitat_baselines.writer_type="wb"

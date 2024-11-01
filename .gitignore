@@ -38,3 +38,5 @@ new_configs/*
 
 # scripts
 scripts/
+
+*.pt
