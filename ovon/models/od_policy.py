@@ -317,7 +317,6 @@ class OVONNet(Net):
 
         # Object Detection
         self.object_detector = YOLOPerception()
-        mask_feats = mask_encoder(observation_space,mask_encoding_method="cnn")
         rnn_input_size_info["mask_embedding"] = 768
         
         # Visual encoder
@@ -479,8 +478,13 @@ class OVONNet(Net):
 
         if self._fusion_type.concat and not self._fusion_type.late_fusion:
             x.append(object_goal)
-
-        
+            
+        if self.SEG_MASKS in observations:
+            mask_feats = observations[self.SEG_MASKS]
+        else:
+            mask_feats = self.object_detector.predict(observations)
+            
+        x.append(mask_feats)        
         if EpisodicCompassSensor.cls_uuid in observations and self._use_odom:
             compass_observations = torch.stack(
                 [

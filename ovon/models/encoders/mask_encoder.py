@@ -1,7 +1,7 @@
 from typing import Any
 from torch import nn
 from gym import spaces
-
+import torch
 POSSIBLE_ENCODERS = {"cnn", "mlp", "resnet18"}
 
 class CNNMaskEncoder(nn.Module):
@@ -19,7 +19,8 @@ class CNNMaskEncoder(nn.Module):
         )
         self.fc = nn.Linear(512, output_dim)
 
-    def forward(self, x):
+    def forward(self,  x: torch.Tensor) -> torch.Tensor:
+        x = x.permute(0, 3, 1, 2)
         x = self.conv_layers(x)
         x = x.view(x.size(0), -1)  # Flatten
         return self.fc(x)
@@ -50,16 +51,15 @@ class ResNet18MaskEncoder(nn.Module):
         x = self.resnet(x)
         return self.fc(x)
 
-def mask_encoder(observation_space: spaces.Dict, mask_encoding_method: str = "cnn") -> Any:
-
+def mask_encoder(mask_encoding_method: str = "cnn") -> Any:
     # Choose mask encoding method based on the config parameter
     if mask_encoding_method == "cnn":
-        return CNNMaskEncoder(output_dim=768)
-    elif mask_encoding_method == "mlp":
-        input_dim = observation_space["mask"].shape[0] * observation_space["mask"].shape[1]
-        return MLPMaskEncoder(input_dim=input_dim, output_dim=768)
-    elif mask_encoding_method == "resnet18":
-        return ResNet18MaskEncoder(output_dim=768)
+        return CNNMaskEncoder(output_dim=768).cuda()
+    # elif mask_encoding_method == "mlp":
+    #     input_dim = observation_space["mask"].shape[0] * observation_space["mask"].shape[1]
+    #     return MLPMaskEncoder(input_dim=input_dim, output_dim=768)
+    # elif mask_encoding_method == "resnet18":
+    #     return ResNet18MaskEncoder(output_dim=768)
     else:
         raise ValueError(f"Unsupported mask encoding method: {mask_encoding_method}")
 

@@ -9,7 +9,7 @@ from habitat.core.simulator import RGBSensor, Sensor, SensorTypes, Simulator
 from habitat.core.utils import try_cv2_import
 from habitat.sims.habitat_simulator.habitat_simulator import HabitatSim
 from habitat.tasks.nav.nav import NavigationEpisode
-
+from ovon.models.detection.constants import CLASSES
 from ovon.utils.utils import load_pickle
 
 if TYPE_CHECKING:
@@ -76,7 +76,46 @@ class ClipObjectGoalSensor(Sensor):
             print("Missing category: {}".format(category))
         return self.cache[category]
 
+@registry.register_sensor
+class YOLOObjectSensor(Sensor):
+    cls_uuid: str = "yolo_object_sensor"
 
+    def __init__(
+        self,
+        config,
+        *args: Any,
+        **kwargs: Any,
+    ):
+
+        super().__init__(config=config)
+
+    def _get_uuid(self, *args: Any, **kwargs: Any) -> str:
+        return self.cls_uuid
+
+    def _get_sensor_type(self, *args: Any, **kwargs: Any):
+        return SensorTypes.SEMANTIC
+
+    def _get_observation_space(self, *args: Any, **kwargs: Any):
+        sensor_shape = (1,)
+        return spaces.Box(
+            low=0, high=np.inf, shape=sensor_shape, dtype=np.int64
+        )
+
+    def get_observation(
+        self,
+        observations,
+        *args: Any,
+        episode: Any,
+        **kwargs: Any,
+    ) -> Optional[np.ndarray]:
+        category_name = (
+            episode.object_category if hasattr(episode, "object_category") else ""
+        )
+        classes = CLASSES       
+        class_id = classes.index(category_name)
+
+        return np.array([class_id], dtype=np.int64,)
+    
 @registry.register_sensor
 class ClipImageGoalSensor(Sensor):
     cls_uuid: str = "clip_imagegoal"

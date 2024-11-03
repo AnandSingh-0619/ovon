@@ -4,7 +4,11 @@ from gym import spaces
 from habitat_baselines import PPOTrainer
 from habitat_baselines.common.baseline_registry import baseline_registry
 from habitat_baselines.rl.ddppo.policy import PointNavResNetNet
-
+from habitat_baselines.common.obs_transformers import (
+    apply_obs_transforms_batch,
+    apply_obs_transforms_obs_space,
+    get_active_obs_transforms,
+)
 from ovon.utils.rollout_storage_no_2d import RolloutStorageNo2D
 from habitat_baselines.utils.common import (
     batch_obs,
@@ -35,16 +39,27 @@ class PPO_ODTrainer(PPOTrainer):
             ),
             **self.obs_space.spaces,
         })
+        
         # self._use_ovod = self.config.habitat_baselines.rl.ddppo.use_detector
         self._use_ovod=True
         if self._use_ovod:
             self._yolo_detector = (
-                self._agent.actor_critic.net.object_detector
+                self.agent.actor_critic.net.object_detector
             )
         if self._use_ovod:
-            batch[self._agent.actor_critic.net.SEG_MASKS] = self._yolo_detector.predict(
-                batch
-            )
+            batch[self.agent.actor_critic.net.SEG_MASKS] = self._yolo_detector.predict(batch)
+            
+        obs_space = spaces.Dict(
+            {
+                self.agent.actor_critic.net.SEG_MASKS: spaces.Box(
+                    low=np.finfo(np.float32).min,
+                    high=np.finfo(np.float32).max,
+                    shape=self._yolo_detector.output_shape,
+                    dtype=np.float32,
+                ),
+                **obs_space.spaces,
+            }
+        )    
         self.rollouts = RolloutStorageNo2D(
             self.actor_critic.net.visual_encoder,
             batch,
@@ -123,9 +138,7 @@ class PPO_ODTrainer(PPOTrainer):
                 ] = self._encoder(batch)
         if self._use_ovod:
             with torch.no_grad():
-                self._masks = self._yolo_detector.predict(batch)
-
-            batch[self._agent.actor_critic.net.SEG_MASKS] = self._masks
+                batch[self.agent.actor_critic.net.SEG_MASKS] = self._yolo_detector.predict(batch)
             
         self.rollouts.insert(
             next_observations=batch,

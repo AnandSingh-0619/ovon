@@ -13,6 +13,7 @@ from ultralytics import YOLO
 from habitat.core.logging import logger
 from gym import spaces
 from ovon.models.detection.constants import CLASSES
+from ovon.models.encoders.mask_encoder import mask_encoder
 
 class YOLOPerception():
     def __init__(
@@ -39,6 +40,7 @@ class YOLOPerception():
 
         self.confidence_threshold = confidence_threshold
         self.model.cuda()
+        self.mask_feats = mask_encoder(mask_encoding_method="cnn")
         self.image_counter = 0
         if verbose:
             logger.info(f"Loading YOLO model: {yolo_model_id} ")
@@ -46,6 +48,8 @@ class YOLOPerception():
             logger.info(
                 f"Total number of parameters in YOLO model: {total_yolo_params}"
             )
+        self.output_size = 768
+        self.output_shape = (self.output_size,)
 
 
     def predict(
@@ -63,7 +67,7 @@ class YOLOPerception():
 
         nms_threshold = 0.8
 
-        images_tensor = obs["head_rgb"]
+        images_tensor = obs["rgb"]
         obj_class_ids = obs["yolo_object_sensor"].cpu().numpy().flatten()
 
         batch_size = images_tensor.shape[0]
@@ -113,5 +117,10 @@ class YOLOPerception():
 
         torch.cuda.empty_cache()
         semantic_masks = np.array(semantic_masks)
-        return semantic_masks
+        semantic_masks = (
+            torch.tensor(semantic_masks,dtype=torch.float32,device=torch.device("cuda:{}".format(torch.cuda.current_device())),).detach().requires_grad_(False)
+        )
+        mask_feats = self.mask_feats(semantic_masks)
+
+        return mask_feats 
 

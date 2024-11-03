@@ -17,7 +17,7 @@ from habitat_baselines.config.default_structured_configs import (
 from hydra.core.config_search_path import ConfigSearchPath
 from hydra.core.config_store import ConfigStore
 from hydra.plugins.search_path_plugin import SearchPathPlugin
-
+from ovon.task.sensors import YOLOObjectSensor
 cs = ConfigStore.instance()
 
 
@@ -68,7 +68,9 @@ class CurrentEpisodeUUIDSensorConfig(LabSensorConfig):
 class StepIDSensorConfig(LabSensorConfig):
     type: str = "StepIDSensor"
 
-
+@dataclass
+class YOLOObjectSensorConfig(LabSensorConfig):
+    type: str = "YOLOObjectSensor"
 ##########################################################################
 # Measurements
 ##########################################################################
@@ -108,6 +110,7 @@ class ImageNavRewardMeasurementConfig(MeasurementConfig):
 class OVONObjectGoalIDMeasurementConfig(MeasurementConfig):
     type: str = "OVONObjectGoalID"
     cache: str = "data/clip_embeddings/ovon_stretch_final_cache.pkl"
+
 
 
 ##########################################################################
@@ -312,6 +315,13 @@ cs.store(
     group="habitat/task/measurements",
     name="collisions",
     node=CollisionsMeasurementConfig,
+)
+
+cs.store(
+    package="habitat.task.lab_sensors.yolo_object_sensor",
+    group="habitat/task/lab_sensors",
+    name="yolo_object_sensor",
+    node=YOLOObjectSensorConfig,
 )
 
 # cs.store(
