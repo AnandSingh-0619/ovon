@@ -331,4 +331,3 @@ class HabitatConfigPlugin(SearchPathPlugin):
             provider="habitat_baselines",
             path="pkg://habitat_baselines/config/",
         )
-
