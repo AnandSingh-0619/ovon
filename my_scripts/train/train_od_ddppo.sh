@@ -24,7 +24,7 @@ conda deactivate
 conda activate ovonv3
 
 TENSORBOARD_DIR="tb/objectnav/train/od_ddppo_${JOB_ID}"
-CHECKPOINT_DIR="data/new_checkpoints/objectnav/od_ddppo_${JOB_ID}"
+CHECKPOINT_DIR="data/new_checkpoints/objectnav/od_ddppo_999360"
 LOG_DIR="Logs/ddppo_od_rnn_${JOB_ID}.log"
 split="train"
 
