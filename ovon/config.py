@@ -331,7 +331,4 @@ class HabitatConfigPlugin(SearchPathPlugin):
             provider="habitat_baselines",
             path="pkg://habitat_baselines/config/",
         )
-        search_path.append(
-            provider="ovon",
-            path="/nethome/asingh3064/flash/ovon/config/tasks",
-        )
+
