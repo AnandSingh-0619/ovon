@@ -9,7 +9,6 @@
 #SBATCH --partition=kira-lab,overcap
 #SBATCH --qos=short
 #SBATCH --signal=USR1@100
-#SBATCH --requeue
 
 export GLOG_minloglevel=2
 export HABITAT_SIM_LOG=quiet
@@ -38,4 +37,5 @@ srun python -um ovon.run \
   habitat_baselines.num_environments=24 \
   habitat.dataset.data_path=data/datasets/ovon/hm3d/$split/$split.json.gz \
   habitat_baselines.load_resume_state_config=True \
+  habitat_baselines.total_num_steps=300000000 \
   habitat_baselines.writer_type="wb"
