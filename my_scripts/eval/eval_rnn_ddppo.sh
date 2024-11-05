@@ -21,12 +21,12 @@ JOB_ID=${SLURM_JOB_ID}
 
 source /nethome/asingh3064/flash/envs/etc/profile.d/conda.sh
 conda deactivate
-conda activate ovon
+conda activate ovonv3
 
 TENSORBOARD_DIR="tb/objectnav/eval/ddppo_${JOB_ID}"
 CHECKPOINT_DIR="data/checkpoints/eval/"
 LOG_DIR="Logs/ddppo_rnn_${JOB_ID}.log"
-split="val_seen_synonyms"
+split="val_unseen"
 
 srun python -um ovon.run \
   --run-type eval \
@@ -37,5 +37,5 @@ srun python -um ovon.run \
   habitat_baselines.eval_ckpt_path_dir=${CHECKPOINT_DIR} \
   habitat_baselines.log_file=${LOG_DIR} \
   habitat_baselines.num_environments=24 \
-  habitat.dataset.data_path=data/datasets/ovon/hm3d/val_seen_synonyms/val_unseen_easy.json.gz \
+  habitat.dataset.data_path=data/datasets/ovon/hm3d/val_unseen/val_unseen_hard.json.gz \
   habitat_baselines.load_resume_state_config=False 
