@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=ovon-eval
-#SBATCH --output=slurm_logs/eval/ovon-ddppo-%j.out
-#SBATCH --error=slurm_logs/eval/ovon-ddppo-%j.err
+#SBATCH --output=slurm_logs/eval/ovon-ver-%j.out
+#SBATCH --error=slurm_logs/eval/ovon-ver-%j.err
 #SBATCH --gpus a40:1
 #SBATCH --nodes 1
 #SBATCH --cpus-per-task 10
@@ -9,7 +9,7 @@
 #SBATCH --partition=kira-lab,overcap
 #SBATCH --qos=short
 #SBATCH --signal=USR1@100
-
+#SBATCH --requeue
 
 export GLOG_minloglevel=2
 export HABITAT_SIM_LOG=quiet
@@ -37,5 +37,5 @@ srun python -um ovon.run \
   habitat_baselines.eval_ckpt_path_dir=${CHECKPOINT_DIR} \
   habitat_baselines.log_file=${LOG_DIR} \
   habitat_baselines.num_environments=24 \
-  habitat.dataset.data_path=data/datasets/ovon/hm3d/val_unseen/val_unseen_hard.json.gz \
-  habitat_baselines.load_resume_state_config=False 
+   habitat_baselines.load_resume_state_config=True 
+ 
