@@ -38,6 +38,6 @@ srun python -um ovon.run \
   habitat_baselines.eval_ckpt_path_dir=${CHECKPOINT_DIR} \
   habitat_baselines.log_file=${LOG_DIR} \
   habitat_baselines.num_environments=24 \
-   habitat_baselines.load_resume_state_config=True 
-  # habitat.dataset.data_path=data/datasets/ovon/hm3d/val_unseen/val_unseen_hard.json.gz \
+  habitat_baselines.load_resume_state_config=True \
+  habitat.dataset.data_path=data/datasets/ovon/hm3d/val_seen/val_seen.json.gz 
  

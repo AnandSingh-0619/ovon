@@ -14,13 +14,13 @@ from habitat.core.logging import logger
 from gym import spaces
 from ovon.models.detection.constants import CLASSES
 from ovon.models.encoders.mask_encoder import mask_encoder
-
+import wandb
 class YOLOPerception():
     def __init__(
         self,
-        yolo_model_id: Optional[str] = "yolov8s-world.pt",
+        yolo_model_id: Optional[str] = "yolov8x-worldv2.pt",
         verbose: Optional[bool] = False,
-        confidence_threshold: Optional[float] = 0.03,
+        confidence_threshold: Optional[float] = 0.002,
     ):
         """Loads a YOLO model for object detection and instance segmentation
 
@@ -50,7 +50,6 @@ class YOLOPerception():
             )
         self.output_size = 768
         self.output_shape = (self.output_size,)
-
 
     def predict(
         self,
@@ -84,6 +83,7 @@ class YOLOPerception():
                 verbose=False,
             )
         )
+        total_detections = 0
         semantic_masks = []
         for idx, result in enumerate(results):
             class_ids = result.boxes.cls.cpu().numpy().astype(int)
@@ -99,6 +99,8 @@ class YOLOPerception():
                 obj_boxes = input_boxes[obj_mask_idx]
                 obj_confidences = confidences[obj_mask_idx]
                 if len(obj_boxes) > 0:
+                    total_detections += 1
+
                     # Select the box with the highest confidence
                     max_conf_idx = np.argmax(obj_confidences)
                     best_box = obj_boxes[max_conf_idx]
@@ -121,6 +123,9 @@ class YOLOPerception():
             torch.tensor(semantic_masks,dtype=torch.float32,device=torch.device("cuda:{}".format(torch.cuda.current_device())),).detach().requires_grad_(False)
         )
         mask_feats = self.mask_feats(semantic_masks)
-
+        
+        if wandb.run is not None:
+            wandb.log({"total_detections": total_detections})
+        # logger.info(f"Tracked total_detections: {total_detections}")
         return mask_feats 
 

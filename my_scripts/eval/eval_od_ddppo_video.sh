@@ -8,7 +8,7 @@
 #SBATCH --ntasks-per-node 1
 #SBATCH --partition=kira-lab,overcap
 #SBATCH --qos=short
-#SBATCH --exclude=omgwth,clippy,major,baymax,ig-88
+#SBATCH --exclude=heistotron
 #SBATCH --signal=USR1@100
 #SBATCH --requeue
 
@@ -23,11 +23,11 @@ JOB_ID=${SLURM_JOB_ID}
 source /nethome/asingh3064/flash/envs/etc/profile.d/conda.sh
 conda deactivate
 conda activate ovonv3
-
+export OVON_VIDEO_DIR=/nethome/asingh3064/flash/ovon/video_dir/ddppo_val_seen
 split="val_unseen"
 
 TENSORBOARD_DIR="tb/objectnav/eval/ddppo_${JOB_ID}"
-CHECKPOINT_DIR="data/checkpoints/eval_od2/"
+CHECKPOINT_DIR="data/checkpoints/eval_od1/"
 LOG_DIR="Logs/eval_ddppo_od_${JOB_ID}.log"
 
 srun python -um ovon.run \
@@ -39,7 +39,14 @@ srun python -um ovon.run \
   habitat_baselines.eval_ckpt_path_dir=${CHECKPOINT_DIR} \
   habitat_baselines.log_file=${LOG_DIR} \
   habitat_baselines.rl.policy.name=PointNavResNetODPolicy \
-  habitat_baselines.num_environments=32 \
+  habitat_baselines.num_environments=1 \
   habitat.dataset.data_path=data/datasets/ovon/hm3d/val_seen/val_seen.json.gz \
-  habitat_baselines.load_resume_state_config=False 
+  habitat_baselines.load_resume_state_config=False \
+  habitat_baselines.eval.video_option="['disk']" \
+  habitat_baselines.video_dir=${OVON_VIDEO_DIR} \
+  habitat.simulator.agents.main_agent.sim_sensors.rgb_sensor.width=720 \
+  habitat.simulator.agents.main_agent.sim_sensors.rgb_sensor.height=1280 \
+  habitat_baselines.rl.policy.obs_transforms.resize.size="[720, 720]" \
+  habitat.seed=${RANDOM} \
+  habitat.simulator.habitat_sim_v0.allow_sliding=False \
 

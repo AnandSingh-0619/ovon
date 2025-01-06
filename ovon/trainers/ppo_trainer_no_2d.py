@@ -109,8 +109,8 @@ class PPONo2DTrainer(PPOTrainer):
 
         with read_write(config):
             config.habitat.dataset.split = config.habitat_baselines.eval.split
-            config.habitat.dataset.split='val_unseen'
-            config.habitat.dataset.data_path='data/datasets/ovon/hm3d/val_unseen/val_unseen_hard.json.gz'
+            config.habitat.dataset.split='val_seen_synonyms'
+            config.habitat.dataset.data_path='data/datasets/ovon/hm3d/val_seen_synonyms/val_unseen_easy.json.gz'
             
 
         if (

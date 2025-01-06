@@ -40,3 +40,6 @@ new_configs/*
 scripts/
 
 *.pt
+*.err
+*.out
+*.png

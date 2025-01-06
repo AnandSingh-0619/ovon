@@ -207,8 +207,9 @@ class PPO_ODTrainer(PPOTrainer):
 
         with read_write(config):
             config.habitat.dataset.split = config.habitat_baselines.eval.split
-            config.habitat.dataset.split='val_unseen'
-            config.habitat.dataset.data_path='data/datasets/ovon/hm3d/val_unseen/val_unseen_hard.json.gz'
+            config.habitat.dataset.split='val_seen'
+            config.habitat.dataset.data_path='data/datasets/ovon/hm3d/val_seen/val_seen.json.gz'
+            config.habitat_baselines.total_num_steps=500000000
             
 
         if (
